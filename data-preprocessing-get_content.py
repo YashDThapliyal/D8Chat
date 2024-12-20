@@ -12,7 +12,22 @@ def load_book_structure(toc_path):
         toc = yaml.safe_load(file)
     return toc
 
+def read_markdown(file_path):
+    """
+    Reads and returns the content of a Markdown file.
+    Args:
+        file_path (str): Path to the markdown file.
+    Returns:
+        str: File content as a string.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return file.read()
+    except FileNotFoundError:
+        return f"File not found: {file_path}"
 
-toc_path = "/Users/yash/Documents/Data-8-ChatBot/D8Chat/textbook-main/_toc.yml"
-toc = load_book_structure(toc_path)
-print(toc)  
+
+if __name__ == "__main__":
+    toc_path = "/Users/yash/Documents/Data-8-ChatBot/D8Chat/textbook-main/_toc.yml"
+    toc = load_book_structure(toc_path)
+    print(toc)  
