@@ -15,10 +15,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced CSS with input field improvements
+# Enhanced CSS without avatar override
 st.markdown("""
 <style>
-    /* Previous styles remain the same */
+    /* Main container styling */
     .main {
         padding: 2rem;
     }
@@ -29,7 +29,7 @@ st.markdown("""
         border: 2px solid var(--secondary-background-color);
         border-radius: 12px;
         padding: 0.75rem;
-        padding-right: 40px; /* Space for the hint */
+        padding-right: 40px;
         font-size: 1rem;
         transition: all 0.3s ease;
         position: relative;
@@ -88,29 +88,6 @@ st.markdown("""
         background-color: rgba(71, 80, 99, 0.8);
     }
     
-    .chat-message .avatar {
-        width: 15%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .chat-message .avatar img {
-        max-width: 60px;
-        max-height: 60px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid var(--text-color);
-    }
-    
-    .chat-message .message {
-        width: 85%;
-        padding: 0 1.5rem;
-        color: var(--text-color);
-        font-size: 1rem;
-        line-height: 1.5;
-    }
-    
     /* Loading animation */
     @keyframes pulse {
         0% { opacity: 0.4; }
@@ -158,34 +135,38 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
 st.markdown("""
     <h1 style='text-align: center; margin-bottom: 2rem; animation: fadeIn 1s ease;'>
         Data 8 Chatbot 🐶
     </h1>
 """, unsafe_allow_html=True)
 
-
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-
+# Display chat messages from history
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if message["role"] == "user":
+        with st.chat_message("user"):
+            st.markdown(message["content"])
+    else:
+        with st.chat_message("assistant", avatar="🐶"):  # Set dog emoji as avatar
+            st.markdown(message["content"])
 
-
+# Handle new messages
 if prompt := st.chat_input("What would you like to know about Data 8? (Press Enter to send)"):
-
+    # Display user message
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
-
+    
+    # Show loading state
     with st.spinner():
         relevant_chunks = query_processor.process_query(prompt)
         context = " ".join(relevant_chunks)
         response = response_generator.generate_response(prompt, context)
         
-    with st.chat_message("assistant"):
+    # Display assistant response with dog avatar
+    with st.chat_message("assistant", avatar="🐶"):
         st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response})
 
@@ -204,7 +185,6 @@ with st.sidebar:
         - Programming assignments
         - Statistical methods
         - Data visualization
-        
     """)
     
     st.markdown("---")
@@ -223,5 +203,3 @@ with st.sidebar:
             <p style='font-size: 0.9rem;'>Made with ❤️ by Yash Thapliyal for future Data 8 Students</p>
         </div>
     """, unsafe_allow_html=True)
-
-
