@@ -144,7 +144,6 @@ st.markdown("""
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history
 for message in st.session_state.messages:
     if message["role"] == "user":
         with st.chat_message("user"):
@@ -153,24 +152,21 @@ for message in st.session_state.messages:
         with st.chat_message("assistant", avatar="🐶"):  # Set dog emoji as avatar
             st.markdown(message["content"])
 
-# Handle new messages
+
 if prompt := st.chat_input("What would you like to know about Data 8? (Press Enter to send)"):
-    # Display user message
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
     
-    # Show loading state
     with st.spinner():
         relevant_chunks = query_processor.process_query(prompt)
         context = " ".join(relevant_chunks)
         response = response_generator.generate_response(prompt, context)
         
-    # Display assistant response with dog avatar
     with st.chat_message("assistant", avatar="🐶"):
         st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response})
 
-# Enhanced sidebar
+
 with st.sidebar:
     st.markdown("""
         <div style='text-align: center; padding: 1rem;'>
