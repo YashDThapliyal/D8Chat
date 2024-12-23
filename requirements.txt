@@ -1,3 +1,5 @@
 nbformat
 langchain
 sentence-transformers
+chromadb
+groq
