@@ -1,0 +1,3 @@
+nbformat
+langchain
+sentence-transformers
